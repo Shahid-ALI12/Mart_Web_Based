@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import NotificationCenter from '@/components/shared/notification-center'
 import {
   ShoppingCart,
   Search,
@@ -24,6 +25,8 @@ import {
   ChevronDown,
   Menu,
   X,
+  Star,
+  MapPin,
 } from 'lucide-react'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -37,6 +40,7 @@ export default function AppShell({ children }: AppShellProps) {
     user,
     currentView,
     setView,
+    setSubView,
     logout,
     cart,
     cartOpen,
@@ -142,6 +146,9 @@ export default function AppShell({ children }: AppShellProps) {
                   )}
                 </Button>
               )}
+
+              {/* Notifications */}
+              <NotificationCenter />
 
               {/* User Menu */}
               <DropdownMenu>
@@ -270,6 +277,13 @@ export default function AppShell({ children }: AppShellProps) {
                 </span>
               )}
               <span className="text-[10px]">Cart</span>
+            </button>
+            <button
+              onClick={() => setSubView('loyalty')}
+              className="flex flex-col items-center gap-0.5 text-gray-500"
+            >
+              <Star className="w-5 h-5" />
+              <span className="text-[10px]">Loyalty</span>
             </button>
             <button className="flex flex-col items-center gap-0.5 text-gray-500">
               <User className="w-5 h-5" />
