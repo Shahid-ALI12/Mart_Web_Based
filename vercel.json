@@ -1,13 +1,3 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "env": {
-    "NEXTAUTH_SECRET": "@megamart-auth-secret",
-    "DATABASE_URL": "@megamart-database-url"
-  }
+  "framework": "nextjs"
 }
