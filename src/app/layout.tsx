@@ -14,17 +14,46 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mega Mart — Your One-Stop Shopping Destination",
-  description: "Shop fresh groceries, daily essentials, and 5000+ products with fast delivery. Mega Mart — everything you need, delivered fresh.",
-  keywords: ["Mega Mart", "grocery", "supermarket", "online shopping", "fresh produce", "delivery"],
-  authors: [{ name: "Mega Mart" }],
-  icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+  title: {
+    default: "Mega Mart — Your One-Stop Shopping Destination",
+    template: "%s | Mega Mart",
   },
+  description: "Shop fresh groceries, daily essentials, and 5000+ products with fast delivery. Mega Mart — everything you need, delivered fresh.",
+  keywords: ["Mega Mart", "grocery", "supermarket", "online shopping", "fresh produce", "delivery", "Pakistan", "Lahore"],
+  authors: [{ name: "Mega Mart" }],
+  creator: "Mega Mart",
+  publisher: "Mega Mart",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
+  alternates: {
+    canonical: "/",
+  },
+  icons: {
+    icon: "/logo.svg",
+    apple: "/logo.svg",
+  },
+  manifest: "/manifest.json",
   openGraph: {
     title: "Mega Mart",
     description: "Everything you need, delivered fresh",
     type: "website",
+    locale: "en_PK",
+    siteName: "Mega Mart",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Mega Mart",
+    description: "Everything you need, delivered fresh",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
@@ -34,7 +63,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >

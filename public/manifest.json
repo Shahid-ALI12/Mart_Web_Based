@@ -1,0 +1,37 @@
+{
+  "name": "Mega Mart",
+  "short_name": "MegaMart",
+  "description": "Your one-stop shop for everything — fresh groceries, daily essentials, and 5000+ products with fast delivery.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#16a34a",
+  "orientation": "any",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["shopping", "food", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "Search Products",
+      "url": "/?action=search",
+      "description": "Search for products"
+    },
+    {
+      "name": "My Cart",
+      "url": "/?action=cart",
+      "description": "View your shopping cart"
+    },
+    {
+      "name": "My Orders",
+      "url": "/?action=orders",
+      "description": "Track your orders"
+    }
+  ]
+}
