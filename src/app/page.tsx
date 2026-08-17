@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { useAppStore } from '@/stores/app-store'
+import { ErrorBoundary, LightweightErrorBoundary } from '@/components/shared/error-boundary'
 import LoginPage from '@/components/shared/login-page'
 import AppShell from '@/components/shared/app-shell'
 import NotificationCenter from '@/components/shared/notification-center'
@@ -61,10 +62,12 @@ function Storefront() {
   if (currentSubView.startsWith('order-track-')) {
     const orderId = currentSubView.replace('order-track-', '')
     return (
-      <OrderTracker
-        orderId={orderId}
-        onBack={() => setSubView('home')}
-      />
+      <LightweightErrorBoundary name="Order Tracker">
+        <OrderTracker
+          orderId={orderId}
+          onBack={() => setSubView('home')}
+        />
+      </LightweightErrorBoundary>
     )
   }
 
@@ -75,7 +78,9 @@ function Storefront() {
         <Button variant="ghost" size="sm" className="mb-3 gap-1" onClick={() => setSubView('home')}>
           <ArrowLeft className="w-4 h-4" /> Back to Store
         </Button>
-        <LoyaltyPanel />
+        <LightweightErrorBoundary name="Loyalty">
+          <LoyaltyPanel />
+        </LightweightErrorBoundary>
       </div>
     )
   }
@@ -83,7 +88,11 @@ function Storefront() {
   // Product detail view
   if (currentSubView.startsWith('product-')) {
     const productId = currentSubView.replace('product-', '')
-    return <ProductDetail productId={productId} />
+    return (
+      <LightweightErrorBoundary name="Product Detail">
+        <ProductDetail productId={productId} />
+      </LightweightErrorBoundary>
+    )
   }
 
   // Category view
@@ -92,7 +101,9 @@ function Storefront() {
     return (
       <div>
         <HeroSection />
-        <ProductGrid categoryId={categoryId} />
+        <LightweightErrorBoundary name="Category Products">
+          <ProductGrid categoryId={categoryId} />
+        </LightweightErrorBoundary>
       </div>
     )
   }
@@ -101,9 +112,15 @@ function Storefront() {
   return (
     <div>
       <HeroSection />
-      <CategoryGrid />
-      <ProductGrid featured title="Featured Products" />
-      <ProductGrid title={searchQuery ? undefined : 'All Products'} />
+      <LightweightErrorBoundary name="Categories">
+        <CategoryGrid />
+      </LightweightErrorBoundary>
+      <LightweightErrorBoundary name="Featured Products">
+        <ProductGrid featured title="Featured Products" />
+      </LightweightErrorBoundary>
+      <LightweightErrorBoundary name="All Products">
+        <ProductGrid title={searchQuery ? undefined : 'All Products'} />
+      </LightweightErrorBoundary>
     </div>
   )
 }
@@ -159,31 +176,49 @@ function AdminDashboard() {
           </TabsList>
         </div>
         <TabsContent value="home" className="mt-0">
-          <DashboardHome />
+          <LightweightErrorBoundary name="Dashboard">
+            <DashboardHome />
+          </LightweightErrorBoundary>
         </TabsContent>
         <TabsContent value="products" className="mt-0">
-          <ProductManager />
+          <LightweightErrorBoundary name="Product Manager">
+            <ProductManager />
+          </LightweightErrorBoundary>
         </TabsContent>
         <TabsContent value="orders" className="mt-0">
-          <OrderManager />
+          <LightweightErrorBoundary name="Order Manager">
+            <OrderManager />
+          </LightweightErrorBoundary>
         </TabsContent>
         <TabsContent value="inventory" className="mt-0">
-          <InventoryView />
+          <LightweightErrorBoundary name="Inventory">
+            <InventoryView />
+          </LightweightErrorBoundary>
         </TabsContent>
         <TabsContent value="delivery" className="mt-0">
-          <DeliveryManager />
+          <LightweightErrorBoundary name="Delivery">
+            <DeliveryManager />
+          </LightweightErrorBoundary>
         </TabsContent>
         <TabsContent value="promotions" className="mt-0">
-          <PromotionsManager />
+          <LightweightErrorBoundary name="Promotions">
+            <PromotionsManager />
+          </LightweightErrorBoundary>
         </TabsContent>
         <TabsContent value="reports" className="mt-0">
-          <ReportsView />
+          <LightweightErrorBoundary name="Reports">
+            <ReportsView />
+          </LightweightErrorBoundary>
         </TabsContent>
         <TabsContent value="suppliers" className="mt-0">
-          <SupplierManager />
+          <LightweightErrorBoundary name="Suppliers">
+            <SupplierManager />
+          </LightweightErrorBoundary>
         </TabsContent>
         <TabsContent value="license" className="mt-0">
-          <LicenseInfo />
+          <LightweightErrorBoundary name="License">
+            <LicenseInfo />
+          </LightweightErrorBoundary>
         </TabsContent>
       </Tabs>
     </div>
@@ -202,19 +237,33 @@ export default function Home() {
     return <LoginPage />
   }
 
-  // Logged in → Show App Shell with appropriate view
+  // Logged in → Show App Shell with appropriate view (wrapped in ErrorBoundary)
   return (
-    <AppShell>
-      {currentView === 'store' && <Storefront />}
-      {currentView === 'admin' && <AdminDashboard />}
-      {currentView === 'pos' && <PosTerminal />}
-      {currentView === 'rider' && <RiderApp />}
+    <ErrorBoundary name="Mega Mart App">
+      <AppShell>
+        {currentView === 'store' && <Storefront />}
+        {currentView === 'admin' && <AdminDashboard />}
+        {currentView === 'pos' && (
+          <LightweightErrorBoundary name="POS Terminal">
+            <PosTerminal />
+          </LightweightErrorBoundary>
+        )}
+        {currentView === 'rider' && (
+          <LightweightErrorBoundary name="Rider App">
+            <RiderApp />
+          </LightweightErrorBoundary>
+        )}
 
-      {/* Cart Drawer (always available for store) */}
-      <CartDrawer />
+        {/* Cart Drawer (always available for store) */}
+        <LightweightErrorBoundary name="Cart">
+          <CartDrawer />
+        </LightweightErrorBoundary>
 
-      {/* Notification Center (always available) */}
-      <NotificationCenter />
-    </AppShell>
+        {/* Notification Center (always available) */}
+        <LightweightErrorBoundary name="Notifications">
+          <NotificationCenter />
+        </LightweightErrorBoundary>
+      </AppShell>
+    </ErrorBoundary>
   )
 }

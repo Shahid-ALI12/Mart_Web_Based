@@ -169,3 +169,35 @@ Stage Summary:
 - PWA manifest configured
 - Docker + docker-compose ready for deployment
 - Final stats: 70 components, 23 API routes, 34 DB models, 109 source files
+
+---
+Task ID: 8
+Agent: Main
+Task: Phase 8 — Production Hardening
+
+Work Log:
+- Created `/src/lib/sanitize.ts` — comprehensive input sanitization (stripHtml, sanitizeHtml, sanitizeString, sanitizeObject, sanitizeFilename, sanitizeUrl, sanitizeEmail, sanitizePhone, escapeRegex, detectInjection)
+- Created `/src/components/shared/error-boundary.tsx` — 4 error boundary variants (ErrorBoundary, LightweightErrorBoundary, ApiErrorBoundary, withErrorBoundary HOC)
+- Created `/src/lib/api-error.ts` — standardized API error handling (ApiError class, handleApiError, apiSuccess, apiPaginated, asyncRoute wrapper, Prisma error mapping)
+- Created `/src/lib/cors.ts` — CORS configuration (origin allowlisting, preflight handling, dev/prod modes)
+- Created `/src/lib/shutdown.ts` — graceful shutdown handler (signal handling, cleanup, Prisma disconnect, rate limiter cleanup)
+- Enhanced `/src/app/api/health/route.ts` — comprehensive health checks (DB latency, memory %, rate limiter status, auth config, data integrity, version info)
+- Enhanced `/src/middleware.ts` — added CORS support, per-route rate limits, request ID tracking, request logging
+- Enhanced `/src/app/page.tsx` — wrapped all views in ErrorBoundary components
+- Enhanced `/Dockerfile` — added HEALTHCHECK, proper chown, non-root user
+- Enhanced `/docker-compose.yml` — resource limits, logging config, network isolation, optional PostgreSQL+Redis services
+- Created `/ecosystem.config.js` — PM2 cluster config with deployment targets
+- Created `/vercel.json` — Vercel deployment config
+- Enhanced `/.env.example` — added CORS, rate limiting, logging, payment API URLs
+- Build verification: Next.js 16.1.3 build successful (22 routes, 13.8s compile)
+- Health check verified: DB connected (20ms), 34 products, rate limiter active
+- Security headers verified: X-Frame-Options, CSP, HSTS, X-Content-Type-Options
+- Rate limiting verified: X-RateLimit-Remaining headers, per-route limits
+- CORS verified: preflight responses, Access-Control headers, Vary: Origin
+
+Stage Summary:
+- Phase 8 complete: Production hardening fully implemented
+- New utility files: sanitize.ts, api-error.ts, cors.ts, shutdown.ts, error-boundary.tsx
+- All security features verified working: rate limiting, CORS, security headers, health checks
+- Deployment configs ready: Docker, PM2, Vercel
+- Build passes cleanly with zero errors

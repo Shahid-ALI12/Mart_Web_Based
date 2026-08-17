@@ -9,19 +9,82 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=file:./db/custom.db
+      - DATABASE_URL=${DATABASE_URL:-file:./db/custom.db}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-change-me-in-production}
       - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
+      - NEXT_PUBLIC_APP_NAME=${NEXT_PUBLIC_APP_NAME:-Mega Mart}
+      - NEXT_PUBLIC_APP_VERSION=${NEXT_PUBLIC_APP_VERSION:-1.0.0}
       - NODE_ENV=production
+      - CORS_ORIGINS=${CORS_ORIGINS:-}
     volumes:
       - app-data:/app/db
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    networks:
+      - megamart-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ---- PostgreSQL (Production Database) ----
+  # Uncomment for production use
+  # db:
+  #   image: postgres:16-alpine
+  #   environment:
+  #     POSTGRES_DB: megamart
+  #     POSTGRES_USER: megamart
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD:-change-me}
+  #   volumes:
+  #     - pg-data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U megamart"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - megamart-network
+  #   restart: unless-stopped
+
+  # ---- Redis (Rate Limiting & Caching) ----
+  # Uncomment for production rate limiting
+  # redis:
+  #   image: redis:7-alpine
+  #   command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+  #   volumes:
+  #     - redis-data:/data
+  #   ports:
+  #     - "6379:6379"
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - megamart-network
+  #   restart: unless-stopped
 
 volumes:
   app-data:
+  # pg-data:
+  # redis-data:
+
+networks:
+  megamart-network:
+    driver: bridge
