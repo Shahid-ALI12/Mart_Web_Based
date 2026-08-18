@@ -53,11 +53,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
     }
 
-    // Update last login timestamp
-    await db.user.update({
+    // Update last login timestamp (non-blocking, ignore errors on read-only FS)
+    db.user.update({
       where: { id: user.id },
       data: { lastLoginAt: new Date() },
-    })
+    }).catch(() => {/* ignore write errors on read-only FS (Vercel) */})
 
     // Return user data without password hash
     const { passwordHash: _, ...safeUser } = user
