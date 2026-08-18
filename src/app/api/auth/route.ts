@@ -68,7 +68,15 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('[AUTH] Login error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const message = error instanceof Error ? error.message : 'Internal server error'
+    // Check for common database errors
+    if (message.includes('prisma') || message.includes('database') || message.includes('connect')) {
+      return NextResponse.json(
+        { error: 'Database connection failed. Please ensure the database is properly configured and seeded.' },
+        { status: 503 }
+      )
+    }
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
 
