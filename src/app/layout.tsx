@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Mega Mart — Your One-Stop Shopping Destination",
+    default: "Mega Mart",
     template: "%s | Mega Mart",
   },
   description: "Shop fresh groceries, daily essentials, and 5000+ products with fast delivery. Mega Mart — everything you need, delivered fresh.",
